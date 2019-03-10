@@ -1,22 +1,19 @@
+import asyncio
 import os
 import requests
 import time
 from pyquery import PyQuery as pq
 
-
-
 headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36"
 }
 
-
 class Pic:
-    '''用于封装图片标题和url'''
     def __init__(self,name,url):
         self.name=name;
         self.url=url;
 
-pics =[] #全局保存Pic的列表
+pics =[]
 
 def get_url(page):
     # https://www.169tp.com/rentiyishu/list_8_3.html
@@ -53,15 +50,12 @@ def download_pic(pic_name, pic_url):
                 print('downloaded {}'.format(count))
             count += 1;
 
+
+# 总共8页，全下载
 for n in range(8):
     get_url(n)
 
-print(len(pics))
+print(len(pics))  #打印 总数
 
 for i in range(len(pics)):
-    download_pic(pics[i].name,pics[i].url)
-
-
-
-
-
+    asyncio.run(download_pic(pics[i].name,pics[i].url)) #协程 执行下载
